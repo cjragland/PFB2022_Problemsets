@@ -1,0 +1,15 @@
+  413  git status
+  414  git push
+  415  git status
+  416  man rm
+  417  man cp
+  418  touch never.txt
+  419  ls
+  420  git add never.txt
+  421  git status
+  422  git reset never
+  424  git reset never.txt
+  425  git status
+  426  rm never.txt
+  427  ls
+  428  history
