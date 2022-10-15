@@ -1,0 +1,2 @@
+>NM_001126114.2 Homo sapiens tumor protein p53 (TP53), transcript variant 3, mRNA
+>NM_007294.3 Homo sapiens BRCA1, DNA repair associated (BRCA1), transcript variant 1, mRNA
