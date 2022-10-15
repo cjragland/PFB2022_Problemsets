@@ -96,9 +96,8 @@ def parse_fasta(fasta):
     
       # Search for headers and delineate to extract the geneIDs 
       if re.search(r">", line): 
-        geneInfo = re.finditer((r"^>(.+?)\s"), line)
-        print(geneInfo)
-        geneID = geneInfo.group(0) 			### Why is this throwing an error? ###
+        geneInfo = re.search((r"^>(.+\s?)"), line)
+        geneID = geneInfo.group(1)
     
       # Establish a dict entry for the gene id by adding the first line of the sequence     
       elif geneID in parseDict:
@@ -113,22 +112,39 @@ def parse_fasta(fasta):
 
 
 #Question 6
-print("\n\nLet's find all the ApoI cut sites in a sequence from a fasta file:")
+print("\n\nLet's find all the ApoI cut sites in a sequence from a fasta file")
 # ApoI: R^AATTY		R=AorG	Y=CorT 
 
 # Parse the fasta file into a dictionary and check the output
 seqDict = parse_fasta("Python_07_ApoI.fasta")
-print(seqDict)
 
 # Go thru the sequence dictionary
 # Find and creat a list of the cut sites for each gene
-#for gene in seqDict:
-  #cutSites = re.finditer((r"[AG]AATT[CT]"), seqDict[gene])
+for gene in seqDict:
+  cutSites = re.finditer((r"[AG]AATT[CT]"), seqDict[gene])
   
-  # Print the positions of the cut sites  
-  #for site in cutSites:
-      #print(site.start(), site.end())
+  # Print the positions of the cut sites, add one to account for Py3 indexing  
+  for site in cutSites:
+      print(site.start() + 1, site.end() + 1)
+
+
     
+#Question 7
+
+print("\n\nMark all the ApoI cut sites in a sequence from a fasta file")
+seqDict = parse_fasta("Python_07_ApoI.fasta")
+
+for gene in seqDict:
+  # ApoI: R^AATTY | R=AorG, Y=CorT 
+  cutMarked = re.sub( r"([AG])AATT([CT])" , r"\1^AATT\2" , seqDict[gene] )
+  print(cutMarked)
+
+#Question 8
+#Print the cut sequences in length order in electrophoresis
+#Question 9
+#Question 10
+
+
 
 
 
