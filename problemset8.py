@@ -62,49 +62,54 @@ for gene in fastaDict:
 
 #Question 3
 
-# Find the first open reading frame in each sequence 
+print("\n\nFind the first open reading frame in each sequence") 
 fastaDict = parse_fasta(fastaInput)
 
 for gene in fastaDict:
   frameNum = 0
-  
-  # Check for an ORF and obtain its indices
-  if 'ATG' in fastaDict[gene]:
-    if 'TAG' in fastaDict[gene] or 'TGA' in fastaDict[gene] or 'TAA' in fastaDict[gene]:
-      beginStart = fastaDict[gene].find("ATG")
     
-    if 'TAG' in fastaDict[gene]:
-      beginStop = fastaDict[gene].find("TAG")
-    elif 'TAG' in fastaDict[gene]:
-      beginStop = fastaDict[gene].find("TGA")
-    elif 'TAG' in fastaDict[gene]:
-      beginStop = fastaDict[gene].find("TAA")
-
-  # Check that start and stop codon are in a sensible order
-  if not beginStart < beginStop:
+  # Check for an ATG and obtain its first index
+  if not 'ATG' in fastaDict[gene]:
     continue
-  else:  
-    endStop = beginStop + 3
-    orf = fastaDict[gene][beginStart:endStop] 		# End is non-inclusive
+  else:
+    beginATG = fastaDict[gene].find("ATG")
     
     # Generate the header for the ORFs
     frameNum = frameNum + 1
     frame = str(frameNum)
     frameHeader = (gene + "-frame-" + frame + "-codons")
 
-    # Move along the sequence in 3 nt increments and print the codons
-    strCodons = ""
-    codonStart = beginStart
-    
-    for n in range(int(len(orf)+1)):
-      if not codonStart == endStop:
-        nextCodon = orf[codonStart:codonStart+2]
-        strCodons = strCodons + nextCodon		# Concatenate
-        codonStart = codonStart + 3
+    # Move along the sequence in 3 nt increments
+    codonString = ""
+    codonBegin = beginATG
+    codonEnd = codonBegin + 3					# Non-inclusive
+    codonSlice = fastaDict[gene][codonBegin:codonEnd]
+
+    # Check that the previously added codon was not a STOP
+    while 'TAG' not in codonSlice and 'TGA' not in codonSlice and 'TAA' not in codonSlice:
+      
+      # Check that we haven't exceeded the length of the sequence
+      if codonEnd > len(fastaDict[gene]):
+        print("The gene" , gene , "does not contain a valid open reading frame")
+        break
+      
+      # Add the codon to the ORF string and prepare for the next codon
+      else:
+        codonString = codonString + codonSlice + " "
+        codonBegin = codonBegin + 3
+        codonEnd = codonBegin + 3
+        codonSlice = fastaDict[gene][codonBegin:codonEnd]
  
-  # Format output
-  print(frameHeader , "\n" , strCodons , "Expected length:", len(orf))
+  # Add the STOP codon that broke the while loop, note no space char
+  codonString = codonString + codonSlice
+ 
+  # Output gene header and ORF
+  print(frameHeader + "\n" + codonString)
   
+
+
+
+
 
 
 
